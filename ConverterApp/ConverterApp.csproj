@@ -9,11 +9,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="config.json" />
     <None Remove="Frame 15.png" />
     <None Remove="Frame 16.png" />
     <None Remove="Frame 17.png" />
     <None Remove="Frame 18.png" />
     <None Remove="Frame 19.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
