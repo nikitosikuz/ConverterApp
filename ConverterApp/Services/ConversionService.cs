@@ -83,37 +83,31 @@ namespace ConverterApp.Services
         {
             var inputExt = Path.GetExtension(model.InputPath).ToLower();
             var outputExt = Path.GetExtension(model.OutputPath).ToLower();
-            var videoFormats = new[] { ".mp4", ".mkv" };
-            var audioFormats = new[] { ".mp3", ".wav" };
 
             string ffmpegPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ffmpeg.exe");
             var process = new Process();
-            process.StartInfo.FileName = "ffmpeg";
+            process.StartInfo.FileName = ffmpegPath;
 
             string args;
-            if ((videoFormats.Contains(inputExt) || audioFormats.Contains(inputExt)) && outputExt == ".mp3")
+            if ((_config.VideoFormats.Contains(inputExt) || _config.AudioFormats.Contains(inputExt)) && outputExt == ".mp3")
             {
                 args = $"-y -i \"{model.InputPath}\" -vn -acodec libmp3lame -q:a 2 \"{model.OutputPath}\"";
             }
-            else if (videoFormats.Contains(inputExt) && videoFormats.Contains(outputExt))
+            else if (_config.VideoFormats.Contains(inputExt) && _config.VideoFormats.Contains(outputExt))
             {
-                var qualityPresets = new Dictionary<string, (string preset, int crf)>
-                {
-                    ["Low"] = ("veryfast", 30),
-                    ["Medium"] = ("medium", 23),
-                    ["High"] = ("slow", 18),
-                    ["Very High"] = ("veryslow", 15)
-                };
+                var quality = _config.QualityPresets.TryGetValue(model.QualityPreset ?? "Medium", out var preset)
+                    ? preset
+                    : _config.QualityPresets["Medium"];
 
-                var quality = qualityPresets.ContainsKey(model.QualityPreset ?? "")
-                    ? qualityPresets[model.QualityPreset!]
-                    : qualityPresets["Medium"];
-
-                args = $"-y -i \"{model.InputPath}\" -c:v libx264 -preset {quality.preset} -crf {quality.crf} \"{model.OutputPath}\"";
+                args = $"-y -i \"{model.InputPath}\" -c:v libx264 -preset {quality.Preset} -crf {quality.Crf} \"{model.OutputPath}\"";
+            }
+            else if (_config.AudioFormats.Contains(inputExt) && _config.AudioFormats.Contains(outputExt))
+            {
+                args = $"-y -i \"{model.InputPath}\" \"{model.OutputPath}\"";
             }
             else
             {
-                args = $"-y -i \"{model.InputPath}\" \"{model.OutputPath}\"";
+                throw new NotSupportedException("Unsupported media conversion");
             }
 
             process.StartInfo.Arguments = args;
@@ -122,7 +116,6 @@ namespace ConverterApp.Services
             process.StartInfo.RedirectStandardError = true;
             process.StartInfo.RedirectStandardOutput = true;
 
-            // Чтение вывода — чтобы не зависал
             process.OutputDataReceived += (s, e) => Console.WriteLine(e.Data);
             process.ErrorDataReceived += (s, e) => Console.WriteLine(e.Data);
 

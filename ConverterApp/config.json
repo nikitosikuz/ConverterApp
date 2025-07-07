@@ -1,0 +1,36 @@
+{
+  "AllowedFormats": {
+    ".docx": [ ".pdf", ".txt", ".docx" ],
+    ".txt": [ ".pdf", ".docx", ".txt" ],
+    ".pdf": [ ".docx", ".txt", ".pdf" ],
+    ".jpg": [ ".png", ".bmp", ".gif", ".jpg" ],
+    ".jpeg": [ ".png", ".bmp", ".gif", ".jpeg" ],
+    ".png": [ ".jpg", ".bmp", ".gif", ".png" ],
+    ".bmp": [ ".jpg", ".png", ".gif", ".bmp" ],
+    ".gif": [ ".jpg", ".png", ".gif", ".bmp" ],
+    ".mp3": [ ".wav", ".mp3" ],
+    ".wav": [ ".mp3", ".wav" ],
+    ".mp4": [ ".mkv", ".mp4", ".mp3" ],
+    ".mkv": [ ".mp4", ".mkv", ".mp3" ]
+  },
+  "QualityPresets": {
+    "Low": {
+      "Preset": "veryfast",
+      "Crf": 30
+    },
+    "Medium": {
+      "Preset": "medium",
+      "Crf": 23
+    },
+    "High": {
+      "Preset": "slow",
+      "Crf": 18
+    },
+    "Very High": {
+      "Preset": "veryslow",
+      "Crf": 15
+    }
+  },
+  "VideoFormats": [ ".mp4", ".mkv", ".avi" ],
+  "AudioFormats": [ ".mp3", ".wav", ".aac" ]
+}

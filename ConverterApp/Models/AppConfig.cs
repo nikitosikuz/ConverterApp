@@ -11,6 +11,7 @@ namespace ConverterApp.Models
         public Dictionary<string, string[]> AllowedFormats { get; set; }
         public Dictionary<string, QualityPreset> QualityPresets { get; set; }
         public string[] VideoFormats { get; set; }
+        public string[] AudioFormats { get; set; }
     }
 
     public class QualityPreset
