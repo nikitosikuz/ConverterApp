@@ -10,36 +10,18 @@ using System.Windows.Controls;
 
 namespace ConverterApp
 {
-
     public partial class MainWindow : Window
     {
-        private readonly ConversionService _service = new();
+        private readonly AppConfig _config;
 
-        private static readonly Dictionary<string, string[]> AllowedFormats = new()
+        private readonly ConversionService _service;
+
+        public MainWindow()
         {
-            [".docx"] = [".pdf", ".txt", ".docx"],
-            [".txt"] = [".pdf", ".docx", ".txt"],
-            [".pdf"] = [".docx", ".txt", ".pdf"],
-            [".jpg"] = [".png", ".bmp", ".gif", ".jpg"],
-            [".jpeg"] = [".png", ".bmp", ".gif", ".jpeg"],
-            [".png"] = [".jpg", ".bmp", ".gif", ".png"],
-            [".bmp"] = [".jpg", ".png", ".gif", ".bmp"],
-            [".gif"] = [".jpg", ".png", ".gif", ".bmp"],
-            [".mp3"] = [".wav", ".mp3"],
-            [".wav"] = [".mp3", ".wav"],
-            [".mp4"] = [".mkv", ".mp4", ".mp3"],
-            [".mkv"] = [".mp4", ".mkv", ".mp3"],
-        };
-
-        private static readonly Dictionary<string, (string preset, int crf)> QualityPresets = new()
-        {
-            ["Low"] = ("veryfast", 30),
-            ["Medium"] = ("medium", 23),
-            ["High"] = ("slow", 18),
-            ["Very High"] = ("veryslow", 15)
-        };
-
-        public MainWindow() => InitializeComponent();
+            InitializeComponent();
+            _config = ConfigService.LoadConfig();
+            _service = new ConversionService(_config);
+        }
 
         private void Browse_Click(object sender, RoutedEventArgs e)
         {
@@ -50,7 +32,7 @@ namespace ConverterApp
                 string ext = Path.GetExtension(dlg.FileName).ToLower();
                 FormatBox.Items.Clear();
 
-                if (AllowedFormats.TryGetValue(ext, out var formats))
+                if (_config.AllowedFormats.TryGetValue(ext, out var formats))
                 {
                     foreach (var format in formats)
                         FormatBox.Items.Add(format);
@@ -64,10 +46,10 @@ namespace ConverterApp
                 }
 
                 // Показать или скрыть пресеты
-                if (new[] { ".mp4", ".avi" }.Contains(ext))
+                if (_config.VideoFormats.Contains(ext))
                 {
                     QualityComboBox.Items.Clear();
-                    foreach (var key in QualityPresets.Keys)
+                    foreach (var key in _config.QualityPresets.Keys)
                         QualityComboBox.Items.Add(key);
                     QualityComboBox.SelectedIndex = 1; // Default: Medium
                     QualityComboBox.Visibility = Visibility.Visible;
@@ -93,21 +75,29 @@ namespace ConverterApp
             string output = Path.ChangeExtension(input, outputExt);
             string? quality = null;
 
-            if (QualityComboBox.Visibility == Visibility.Visible && QualityComboBox.SelectedItem is ComboBoxItem item)
-                quality = item.Content.ToString();
+            if (QualityComboBox.Visibility == Visibility.Visible && QualityComboBox.SelectedItem is string selectedQuality)
+            {
+                quality = selectedQuality;
+            }
 
             try
             {
-                // Запуск конвертации в фоновом потоке
                 await Task.Run(() =>
                 {
-                    _service.Convert(new ConversionModel
+                    var model = new ConversionModel
                     {
                         InputPath = input,
                         OutputPath = output,
-                        OutputFormat = outputExt,
-                        QualityPreset = quality
-                    });
+                        OutputFormat = outputExt
+                    };
+
+                    if (quality != null && _config.QualityPresets.TryGetValue(quality, out var preset))
+                    {
+                        model.QualityPreset = preset.Preset;
+                        model.Crf = preset.Crf;
+                    }
+
+                    _service.Convert(model);
                 });
 
                 MessageBox.Show("Конвертация завершена!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -123,13 +113,11 @@ namespace ConverterApp
             string inputExt = Path.GetExtension(InputPathBox.Text).ToLower();
             string? selectedOutputExt = FormatBox.SelectedItem?.ToString()?.ToLower();
 
-            var videoFormats = new[] { ".mp4", ".mkv", ".avi" };
-
             // Показываем QualityComboBox, если вход — видео и выход не mp3
-            if (videoFormats.Contains(inputExt) && selectedOutputExt != ".mp3")
+            if (_config.VideoFormats.Contains(inputExt) && selectedOutputExt != ".mp3")
             {
                 QualityComboBox.Items.Clear();
-                foreach (var key in QualityPresets.Keys)
+                foreach (var key in _config.QualityPresets.Keys)
                     QualityComboBox.Items.Add(key);
                 QualityComboBox.SelectedIndex = 1; // Medium
                 QualityComboBox.Visibility = Visibility.Visible;

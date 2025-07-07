@@ -10,7 +10,7 @@ namespace ConverterApp.ViewModels
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        private readonly ConversionService _service = new();
+        private readonly ConversionService _service;
         private string _inputPath;
         private string _outputFormat;
 

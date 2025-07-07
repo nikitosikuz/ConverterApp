@@ -12,5 +12,6 @@ namespace ConverterApp.Models
         public string OutputPath { get; set; } = "";
         public string OutputFormat { get; set; } = "";
         public string? QualityPreset { get; set; }
+        public int Crf { get; set; }
     }
 }
