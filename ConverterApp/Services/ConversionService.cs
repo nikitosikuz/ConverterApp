@@ -12,9 +12,19 @@ namespace ConverterApp.Services
 {
     public class ConversionService
     {
+        private readonly AppConfig _config;
+
+        public ConversionService(AppConfig config)
+        {
+            _config = config;
+        }
+
         public void Convert(ConversionModel model)
         {
             string ext = Path.GetExtension(model.InputPath).ToLower();
+
+            if (!_config.AllowedFormats.ContainsKey(ext))
+                throw new NotSupportedException("Unsupported format");
 
             if (ext == ".docx" || ext == ".txt" || ext == ".pdf")
                 ConvertDocument(model);
