@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Frame 15.png" />
+    <None Remove="Frame 16.png" />
+    <None Remove="Frame 17.png" />
+    <None Remove="Frame 18.png" />
+    <None Remove="Frame 19.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspose.Words" Version="25.6.0" />
+    <PackageReference Include="GemBox.Document" Version="2025.7.104" />
+    <PackageReference Include="Microsoft.Office.Interop.Word" Version="15.0.4797.1004" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Frame 15.png" />
+    <Resource Include="Frame 17.png" />
+    <Resource Include="Frame 18.png" />
+    <Resource Include="Frame 19.png" />
+  </ItemGroup>
+
+</Project>
