@@ -3,6 +3,7 @@ using ConverterApp.Services;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,11 +18,19 @@ namespace ConverterApp
 
         private readonly ConversionService _service;
 
+        private readonly EventLog _eventLog;
+
         public MainWindow()
         {
             InitializeComponent();
             _config = ConfigService.LoadConfig();
             _service = new ConversionService(_config);
+
+            _eventLog = new EventLog("Application");
+            if (!EventLog.SourceExists("ConverterApp"))
+                EventLog.CreateEventSource("ConverterApp", "Application");
+
+            _eventLog.Source = "ConverterApp";
         }
 
         private void Browse_Click(object sender, RoutedEventArgs e)
@@ -70,6 +79,7 @@ namespace ConverterApp
             if (string.IsNullOrWhiteSpace(input) || string.IsNullOrWhiteSpace(outputExt))
             {
                 MessageBox.Show("Выберите файл и формат.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
+                _eventLog.WriteEntry("Попытка запуска конвертации без указания пути или формата.", EventLogEntryType.Warning);
                 return;
             }
 
@@ -102,10 +112,12 @@ namespace ConverterApp
                 });
 
                 MessageBox.Show("Конвертация завершена!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                _eventLog.WriteEntry($"Успешная конвертация: '{input}' → '{output}'", EventLogEntryType.Information);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                _eventLog.WriteEntry($"Ошибка при конвертации: {ex}", EventLogEntryType.Error);
             }
         }
 
