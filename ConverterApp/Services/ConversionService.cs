@@ -80,11 +80,10 @@ namespace ConverterApp.Services
             });
         }
 
-        private bool IsSupported(string ext) => ext switch
+        private bool IsSupported(string ext)
         {
-            ".docx" or ".doc" or ".txt" or ".pdf" => true,
-            _ => false
-        };
+            return _config.DocumentFormats.Contains(ext.ToLower());
+        }
 
         private void ConvertImage(ConversionModel model)
         {
