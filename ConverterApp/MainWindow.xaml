@@ -5,41 +5,115 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ConverterApp"
         mc:Ignorable="d"
-        Title="Конвертер" Height="250" Width="500">
-    <Window.Background>
-        <ImageBrush ImageSource="/Frame 15.png"/>
-    </Window.Background>
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="#9e9e9e" FontFamily="Segoe UI" FontSize="14"
+        Title="Конвертер" Height="300" Width="500">
+
+    <Window.Resources>
+        <!-- Цвета -->
+        <SolidColorBrush x:Key="GrayBrush" Color="#9e9e9e"/>
+        <SolidColorBrush x:Key="TextBrush" Color="#212121"/>
+
+        <!-- ComboBox -->
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="{StaticResource GrayBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource GrayBrush}"/>
+            <Setter Property="Padding" Value="4,2"/>
+        </Style>
+
+        <!-- ComboBoxItem -->
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Background" Value="{StaticResource GrayBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="Padding" Value="4,2"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        </Style>
+    </Window.Resources>
 
 
-    <StackPanel Margin="20,20,20,10">
-        <TextBox x:Name="InputPathBox" IsReadOnly="True" Margin="0 0 0 10" BorderBrush="#00ABADB3" Foreground="White">
-            <TextBox.Background>
-                <ImageBrush/>
-            </TextBox.Background>
-        </TextBox>
-        <Button Content="" Click="Browse_Click" Margin="0,25,0,10">
-            <Button.OpacityMask>
-                <ImageBrush ImageSource="/Frame 19.png"/>
-            </Button.OpacityMask>
-        </Button>
-        <ComboBox x:Name="QualityComboBox"
-          Width="150"
-          Margin="10"
-          Visibility="Collapsed"
-          SelectedIndex="1">
-        </ComboBox>
-        <ComboBox x:Name="FormatBox" SelectionChanged="FormatBox_SelectionChanged" Margin="0,25,0,0" Panel.ZIndex="7" MaxDropDownHeight="294" HorizontalContentAlignment="Center" BorderBrush="#00ACACAC" Background="#00FF0000">
-            <ComboBox.OpacityMask>
-                <ImageBrush ImageSource="/Frame 18.png"/>
-            </ComboBox.OpacityMask>
-        </ComboBox>
-        <Button Content="" Click="Convert_Click" Margin="0,25,0,30" Height="22">
-            <Button.BorderBrush>
-                <ImageBrush/>
-            </Button.BorderBrush>
-            <Button.Background>
-                <ImageBrush ImageSource="/Frame 17.png"/>
-            </Button.Background>
-        </Button>
-    </StackPanel>
+    <Grid>
+        <!-- Верхняя панель -->
+        <Grid Background="#424242" Height="32" VerticalAlignment="Top" MouseDown="TitleBar_MouseDown">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Конвертер"
+                   FontSize="14"
+                   Foreground="White"
+                   VerticalAlignment="Center"
+                   Margin="10,0,0,0" />
+
+            <Button Grid.Column="1"
+                Width="32"
+                Height="32"
+                Content="–"
+                Click="Minimize_Click"
+                Background="Transparent"
+                Foreground="White"
+                BorderBrush="{x:Null}"/>
+
+            <Button Grid.Column="2"
+                Width="32"
+                Height="32"
+                Content="X"
+                Click="Close_Click"
+                Background="Transparent"
+                Foreground="White"
+                BorderBrush="{x:Null}"/>
+        </Grid>
+
+        <!-- Основной интерфейс -->
+        <StackPanel Margin="20,40,20,10">
+            <!-- отступ сверху из-за панели 32px -->
+            <TextBox x:Name="InputPathBox"
+                 IsReadOnly="True"
+                 Margin="0 0 0 10"
+                 Background="#9e9e9e"
+                 Foreground="#212121"
+                 BorderBrush="#212121"
+                 Padding="5" />
+
+            <Button Content="Выбрать файл"
+                Click="Browse_Click"
+                Margin="0,10,0,10"
+                Background="#424242"
+                Foreground="White"
+                BorderBrush="#212121"
+                Padding="5" />
+
+            <ComboBox x:Name="QualityComboBox"
+                  Width="150"
+                  Margin="0 10 0 10"
+                  Visibility="Collapsed"
+                  SelectedIndex="1"
+                  Background="#9e9e9e"
+                  Foreground="#212121"
+                  BorderBrush="#9e9e9e"
+                  Padding="2" />
+
+            <ComboBox x:Name="FormatBox"
+                  SelectionChanged="FormatBox_SelectionChanged"
+                  Margin="0,10,0,10"
+                  MaxDropDownHeight="294"
+                  HorizontalContentAlignment="Center"
+                  Background="#9e9e9e"
+                  Foreground="#212121"
+                  BorderBrush="#9e9e9e"
+                  Padding="2" />
+
+            <Button Content="Конвертировать"
+                Click="Convert_Click"
+                Margin="0,20,0,0"
+                Height="30"
+                Background="#424242"
+                Foreground="White"
+                BorderBrush="#212121"
+                Padding="5" />
+        </StackPanel>
+    </Grid>
 </Window>
