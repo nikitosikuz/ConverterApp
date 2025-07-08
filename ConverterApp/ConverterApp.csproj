@@ -10,11 +10,7 @@
 
   <ItemGroup>
     <None Remove="config.json" />
-    <None Remove="Frame 15.png" />
     <None Remove="Frame 16.png" />
-    <None Remove="Frame 17.png" />
-    <None Remove="Frame 18.png" />
-    <None Remove="Frame 19.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,13 +24,6 @@
     <PackageReference Include="GemBox.Document" Version="2025.7.104" />
     <PackageReference Include="Microsoft.Office.Interop.Word" Version="15.0.4797.1004" />
     <PackageReference Include="System.Drawing.Common" Version="9.0.6" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Frame 15.png" />
-    <Resource Include="Frame 17.png" />
-    <Resource Include="Frame 18.png" />
-    <Resource Include="Frame 19.png" />
   </ItemGroup>
 
 </Project>
