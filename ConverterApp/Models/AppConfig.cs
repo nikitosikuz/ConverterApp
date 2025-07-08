@@ -12,6 +12,7 @@ namespace ConverterApp.Models
         public Dictionary<string, QualityPreset> QualityPresets { get; set; }
         public string[] VideoFormats { get; set; }
         public string[] AudioFormats { get; set; }
+        public string[] DocumentFormats { get; set; }
     }
 
     public class QualityPreset
@@ -19,4 +20,5 @@ namespace ConverterApp.Models
         public string Preset { get; set; }
         public int Crf { get; set; }
     }
+
 }

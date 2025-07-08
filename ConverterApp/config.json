@@ -32,5 +32,6 @@
     }
   },
   "VideoFormats": [ ".mp4", ".mkv", ".avi" ],
-  "AudioFormats": [ ".mp3", ".wav", ".aac" ]
+  "AudioFormats": [ ".mp3", ".wav", ".aac" ],
+  "DocumentFormats": [ ".docx", ".doc", ".txt", ".pdf", ".rtf" ]
 }
