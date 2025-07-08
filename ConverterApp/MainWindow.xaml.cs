@@ -38,6 +38,7 @@ namespace ConverterApp
             var dlg = new OpenFileDialog();
             if (dlg.ShowDialog() == true)
             {
+                _eventLog.WriteEntry($"Пользователь выбрал файл: {dlg.FileName}", EventLogEntryType.Information);
                 InputPathBox.Text = dlg.FileName;
                 string ext = Path.GetExtension(dlg.FileName).ToLower();
                 FormatBox.Items.Clear();
@@ -52,6 +53,7 @@ namespace ConverterApp
                 else
                 {
                     MessageBox.Show("Формат не поддерживается.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    _eventLog.WriteEntry($"Формат не поддерживается: {ext}", EventLogEntryType.Warning);
                     return;
                 }
 
@@ -90,7 +92,7 @@ namespace ConverterApp
             {
                 quality = selectedQuality;
             }
-
+            _eventLog.WriteEntry($"Запуск конвертации: {input} → {output}", EventLogEntryType.Information);
             try
             {
                 await Task.Run(() =>
@@ -125,7 +127,7 @@ namespace ConverterApp
         {
             string inputExt = Path.GetExtension(InputPathBox.Text).ToLower();
             string? selectedOutputExt = FormatBox.SelectedItem?.ToString()?.ToLower();
-
+            _eventLog.WriteEntry($"Выбран выходной формат: {selectedOutputExt}", EventLogEntryType.Information);
             // Показываем QualityComboBox, если вход — видео и выход не mp3
             if (_config.VideoFormats.Contains(inputExt) && selectedOutputExt != ".mp3")
             {
@@ -153,6 +155,7 @@ namespace ConverterApp
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
+            _eventLog.WriteEntry("Приложение закрыто пользователем.", EventLogEntryType.Information);
             this.Close();
         }
     }
