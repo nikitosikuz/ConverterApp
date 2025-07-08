@@ -1,13 +1,9 @@
 ﻿using ConverterApp.Models;
 using GemBox.Document;
-using SkiaSharp;
 using System.Diagnostics;
-using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Windows;
-using System.Windows.Controls;
-
 
 namespace ConverterApp.Services
 {
